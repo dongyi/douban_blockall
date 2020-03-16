@@ -1,7 +1,7 @@
 import random
 import string
 import json
-from user_header import header_txt_from_clipboard
+from user_header import header_txt_from_clipboard, headers, cookies
 
 
 def random_agent():
@@ -58,6 +58,6 @@ USER_AGENT = (
 
 
 def gen_headers():
-    requests_lines = header_txt_from_clipboard.split('\n')
-    headers = dict([(i.split(': ')[0], ''.join(i.split(': ')[1:])) for i in header_txt_from_clipboard.split('\n') if i != ''])
+    cookie_str = ';'.join([f"{k}={v}" for k, v in cookies.items()])
+    headers['Cookie'] = cookie_str
     return headers

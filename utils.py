@@ -1,7 +1,7 @@
 import random
 import string
 import json
-from user_header import header_txt_from_clipboard, headers, cookies
+from user_header import headers, cookies
 
 
 def random_agent():

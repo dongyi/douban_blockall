@@ -5,7 +5,7 @@
 
 from pyspider.libs.base_handler import *
 from config import target_group_id
-from utils import gen_headers, random_bid
+from utils import gen_headers, random_bid, cookies
 
 
 class Handler(BaseHandler):
@@ -24,7 +24,7 @@ class Handler(BaseHandler):
             if 'members?start=' in each.attr.href:
                 next_page_urls.append(each.attr.href)
             if '/people/' in each.attr.href:
-                self.crawl(each.attr.href, callback=self.detail_page, headers=gen_headers())
+                self.block(each.attr.href)
 
         next_page_start = min([int(i.split('?start=')[-1]) for i in next_page_urls])
         next_page_url = f'https://www.douban.com/group/{target_group_id}/members?start={next_page_start}'
@@ -37,8 +37,11 @@ class Handler(BaseHandler):
             "title": response.doc('title').text(),
         }
 
-    @config(priority=3)
-    def member_page(self, response):
-        return {
-
+    def block(self, url):
+        member_id = url.split('/people/')[-1]
+        url = 'https://www.douban.com/j/contact/addtoblacklist'
+        data = {
+            'people': member_id,
+            'ck': cookies.get('ck')
         }
+        self.crawl(url, data=data, cookies=self.cookies, callback=self.detail_page, headers=self.headers, method="POST")

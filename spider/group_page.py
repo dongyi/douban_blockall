@@ -10,6 +10,7 @@ from utils import gen_headers, random_bid
 
 class Handler(BaseHandler):
     crawl_config = {
+        'headers': gen_headers(),
     }
 
     @every(minutes=24 * 60)
@@ -23,7 +24,7 @@ class Handler(BaseHandler):
             if 'members?start=' in each.attr.href:
                 next_page_urls.append(each.attr.href)
             if '/people/' in each.attr.href:
-                self.crawl(each.attr.href, callback=self.detail_page, headers=gen_headers(), cookies=random_bid())
+                self.crawl(each.attr.href, callback=self.detail_page, headers=gen_headers())
 
         next_page_start = min([int(i.split('?start=')[-1]) for i in next_page_urls])
         next_page_url = f'https://www.douban.com/group/{target_group_id}/members?start={next_page_start}'

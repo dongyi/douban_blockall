@@ -1,6 +1,7 @@
 import random
 import string
 import json
+from user_header import header_txt_from_clipboard
 
 
 def random_agent():
@@ -49,11 +50,14 @@ def random_bid():
     return {'bid': ''.join(random.sample(string.ascii_letters + string.digits, 11))}
 
 
+USER_AGENT = (
+    "Mozilla/5.0 (Windows NT 6.3; WOW64) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) "
+    "Chrome/40.0.2214.93 Safari/537.36"
+)
+
+
 def gen_headers():
-    return {
-        'User-Agent': random_agent(),
-        "Host": "douban.com",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-        "Accept-Encoding": "gzip, deflate, sdch, br",
-        "Accept-Language": "zh-CN, zh; q=0.8, en; q=0.6",
-    }
+    requests_lines = header_txt_from_clipboard.split('\n')
+    headers = dict([(i.split(': ')[0], ''.join(i.split(': ')[1:])) for i in header_txt_from_clipboard.split('\n') if i != ''])
+    return headers

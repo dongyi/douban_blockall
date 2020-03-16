@@ -12,7 +12,7 @@ class Handler(BaseHandler):
 
     @every(minutes=24 * 60)
     def on_start(self):
-        self.crawl('https://www.douban.com/group/685388/', callback=self.index_page)
+        self.crawl('https://www.douban.com/group/685388/members', callback=self.index_page)
 
     @config(age=10 * 24 * 60 * 60)
     def index_page(self, response):

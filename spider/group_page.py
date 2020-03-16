@@ -4,6 +4,8 @@
 # Project: douban
 
 from pyspider.libs.base_handler import *
+from config import target_group_id
+from utils import gen_headers, random_bid
 
 
 class Handler(BaseHandler):
@@ -12,7 +14,7 @@ class Handler(BaseHandler):
 
     @every(minutes=24 * 60)
     def on_start(self):
-        self.crawl('https://www.douban.com/group/685388/members', callback=self.index_page)
+        self.crawl(f'https://www.douban.com/group/{target_group_id}/members', callback=self.index_page)
 
     @config(age=10 * 24 * 60 * 60)
     def index_page(self, response):
@@ -21,10 +23,10 @@ class Handler(BaseHandler):
             if 'members?start=' in each.attr.href:
                 next_page_urls.append(each.attr.href)
             if '/people/' in each.attr.href:
-                self.crawl(each.attr.href, callback=self.detail_page)
+                self.crawl(each.attr.href, callback=self.detail_page, headers=gen_headers(), cookies=random_bid())
 
         next_page_start = min([int(i.split('?start=')[-1]) for i in next_page_urls])
-        next_page_url = 'https://www.douban.com/group/685388/members?start=' + str(next_page_start)
+        next_page_url = f'https://www.douban.com/group/{target_group_id}/members?start={next_page_start}'
         self.crawl(next_page_url, callback=self.index_page)
            
     @config(priority=2)
@@ -32,4 +34,10 @@ class Handler(BaseHandler):
         return {
             "url": response.url,
             "title": response.doc('title').text(),
+        }
+
+    @config(priority=3)
+    def member_page(self, response):
+        return {
+
         }

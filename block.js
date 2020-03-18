@@ -19,7 +19,7 @@ const sleep = time => new Promise(resolve=>{
     })
 
     const page = await browser.newPage()
-    var cookies = await page.cookies()
+
 
     await page.goto(url,{
         waitUntil:'networkidle2'
@@ -42,9 +42,12 @@ const sleep = time => new Promise(resolve=>{
         var items = $('li .name a')
 
         var links = [];
-        let ck = cookies.ck
-        var name = "ck=";
-        console.log('start')
+        let ck = ''
+          var value = "; " + document.cookie;
+          var parts = value.split("; ck=");
+          if (parts.length == 2) ck= parts.pop().split(";").shift();
+
+            console.log('start')
 
             items.each((index,item)=>{
                 let it = $(item)

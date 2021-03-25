@@ -15,7 +15,7 @@ MarkupSafe==1.1.1
 pycurl==7.43.0.5
 pyquery==1.4.1
 pyspider==0.3.10
-PyYAML==5.3
+PyYAML==5.4
 requests==2.23.0
 six==1.14.0
 tblib==1.6.0
